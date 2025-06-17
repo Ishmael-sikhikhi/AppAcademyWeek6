@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Contact book</title>
 </head>
+
 <body>
     <div id="table">Contact loading...</div>
     <button id="refresh" type="button">Refresh</button>
@@ -11,33 +13,37 @@
 
     <script src="config.js"></script>
     <script>
+        document.getElementById("refresh").addEventListener("click", fetchContacts );
+
         function fetchContacts() {
             fetch(rootPath + "controller/get-contacts/")
-            .then(function(response) {                    
-                return response.json();
-            })
-            .then(function(data) {
-                displayOutput(data);
-                // console.log(data);
-            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    displayOutput(data);
+                })
+                .catch(function (error) {
+                    console.error("Error fetching contacts:", error); // ✅ Logs any errors
+                });
         }
 
         function displayOutput(data) {
-            output = "<table>";
-            for (a in data){
-                outpu += `
+            let output = "<table>";
+            for (let a in data) {
+                output += `
                     <tr>
-                        <td><img src="${rootPath}controller/uploads/${data[a].avatar}"/></td>
+                        <td><img src="${rootPath}controller/uploads/${data[a].avatar}" width="40"/></td>
                         <td>${data[a].firstname}</td>
                         <td>${data[a].lastname}</td>
-                        <td>${data[a].email}</td>
-                        </tr>
-                `
+                    </tr>
+                `;
             }
             output += "</table>";
             document.getElementById("table").innerHTML = output;
         }
-
+        fetchContacts()
     </script>
 </body>
+
 </html>
